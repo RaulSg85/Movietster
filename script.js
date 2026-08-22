@@ -1,15 +1,11 @@
 // ========================================
-// OMDb
+// OMDb CONFIGURATION
 // ========================================
 
 const API_KEY = "42e69fd5";
 
 const API_URL = "https://www.omdbapi.com/";
 
-
-// ========================================
-// YEAR RANGE
-// ========================================
 
 const MIN_YEAR = 1920;
 
@@ -18,112 +14,7 @@ const MAX_YEAR =
 
 
 // ========================================
-// ALLOWED COUNTRIES
-// ========================================
-
-const ALLOWED_COUNTRIES = [
-
-    // EUROPE
-
-    "Albania",
-    "Andorra",
-    "Austria",
-    "Belarus",
-    "Belgium",
-    "Bosnia and Herzegovina",
-    "Bulgaria",
-    "Croatia",
-    "Cyprus",
-    "Czech Republic",
-    "Czechia",
-    "Denmark",
-    "Estonia",
-    "Finland",
-    "France",
-    "Germany",
-    "Greece",
-    "Hungary",
-    "Iceland",
-    "Ireland",
-    "Italy",
-    "Kosovo",
-    "Latvia",
-    "Liechtenstein",
-    "Lithuania",
-    "Luxembourg",
-    "Malta",
-    "Moldova",
-    "Monaco",
-    "Montenegro",
-    "Netherlands",
-    "North Macedonia",
-    "Norway",
-    "Poland",
-    "Portugal",
-    "Romania",
-    "Russia",
-    "San Marino",
-    "Serbia",
-    "Slovakia",
-    "Slovenia",
-    "Spain",
-    "Sweden",
-    "Switzerland",
-    "Turkey",
-    "Ukraine",
-    "United Kingdom",
-    "UK",
-    "Vatican City",
-
-    // JAPAN
-
-    "Japan",
-
-    // NORTH AMERICA
-
-    "United States",
-    "USA",
-    "United States of America",
-    "Canada",
-    "Mexico",
-
-    "Guatemala",
-    "Belize",
-    "Honduras",
-    "El Salvador",
-    "Nicaragua",
-    "Costa Rica",
-    "Panama",
-
-    "Cuba",
-    "Haiti",
-    "Dominican Republic",
-
-    "Jamaica",
-    "Bahamas",
-    "Barbados",
-    "Trinidad and Tobago",
-
-    // SOUTH AMERICA
-
-    "Argentina",
-    "Bolivia",
-    "Brazil",
-    "Chile",
-    "Colombia",
-    "Ecuador",
-    "Guyana",
-    "Paraguay",
-    "Peru",
-    "Suriname",
-    "Uruguay",
-    "Venezuela"
-
-];
-
-
-// ========================================
-// SEARCH WORDS
+// SEARCH TERMS
 // ========================================
 
 const SEARCH_WORDS = [
@@ -141,9 +32,6 @@ const SEARCH_WORDS = [
     "dark",
     "last",
     "first",
-    "one",
-    "two",
-    "three",
     "war",
     "king",
     "queen",
@@ -158,7 +46,6 @@ const SEARCH_WORDS = [
     "white",
     "red",
     "blue",
-    "green",
     "star",
     "dream",
     "heart",
@@ -168,11 +55,6 @@ const SEARCH_WORDS = [
     "great",
     "little",
     "big",
-    "american",
-    "europe",
-    "japan",
-    "summer",
-    "winter",
     "school",
     "family",
     "friend",
@@ -185,25 +67,75 @@ const SEARCH_WORDS = [
     "past",
     "space",
     "earth",
-    "planet",
     "ghost",
     "game",
-    "killer",
     "hero",
     "father",
     "mother",
     "child",
     "brother",
     "sister",
-    "princess",
-    "river",
-    "mountain",
     "train",
     "car",
     "hotel",
     "journey"
 
 ];
+
+
+// ========================================
+// DOM
+// ========================================
+
+const movieCard =
+    document.getElementById(
+        "movieCard"
+    );
+
+const movieTitle =
+    document.getElementById(
+        "movieTitle"
+    );
+
+const timelineElement =
+    document.getElementById(
+        "timeline"
+    );
+
+const scoreElement =
+    document.getElementById(
+        "score"
+    );
+
+const statusElement =
+    document.getElementById(
+        "status"
+    );
+
+const newGameButton =
+    document.getElementById(
+        "newGameButton"
+    );
+
+const resultOverlay =
+    document.getElementById(
+        "resultOverlay"
+    );
+
+const resultMessage =
+    document.getElementById(
+        "resultMessage"
+    );
+
+const finalScore =
+    document.getElementById(
+        "finalScore"
+    );
+
+const playAgainButton =
+    document.getElementById(
+        "playAgainButton"
+    );
 
 
 // ========================================
@@ -220,82 +152,6 @@ let gameOver = false;
 
 
 // ========================================
-// DOM
-// ========================================
-
-const movieCard =
-    document.getElementById(
-        "movieCard"
-    );
-
-
-const movieTitle =
-    document.getElementById(
-        "movieTitle"
-    );
-
-
-const timelineElement =
-    document.getElementById(
-        "timeline"
-    );
-
-
-const scoreElement =
-    document.getElementById(
-        "score"
-    );
-
-
-const statusElement =
-    document.getElementById(
-        "status"
-    );
-
-
-const newGameButton =
-    document.getElementById(
-        "newGameButton"
-    );
-
-
-const resultOverlay =
-    document.getElementById(
-        "resultOverlay"
-    );
-
-
-const resultIcon =
-    document.getElementById(
-        "resultIcon"
-    );
-
-
-const resultTitle =
-    document.getElementById(
-        "resultTitle"
-    );
-
-
-const resultMessage =
-    document.getElementById(
-        "resultMessage"
-    );
-
-
-const finalScore =
-    document.getElementById(
-        "finalScore"
-    );
-
-
-const playAgainButton =
-    document.getElementById(
-        "playAgainButton"
-    );
-
-
-// ========================================
 // RANDOM NUMBER
 // ========================================
 
@@ -305,10 +161,8 @@ function randomNumber(
 ) {
 
     return Math.floor(
-
         Math.random() *
         (max - min + 1)
-
     ) + min;
 
 }
@@ -328,32 +182,22 @@ function getRandomSearch() {
             )
         ];
 
-
     const year =
         randomNumber(
             MIN_YEAR,
             MAX_YEAR
         );
 
-
-    const page =
-        randomNumber(
-            1,
-            10
-        );
-
-
     return {
         word,
-        year,
-        page
+        year
     };
 
 }
 
 
 // ========================================
-// SEARCH OMDb
+// OMDb SEARCH
 // ========================================
 
 async function searchMovies(
@@ -361,19 +205,9 @@ async function searchMovies(
 ) {
 
     const url =
-
-        `${API_URL}` +
-
-        `?apikey=${API_KEY}` +
-
-        `&s=${encodeURIComponent(
-            search.word
-        )}` +
-
+        `${API_URL}?apikey=${API_KEY}` +
+        `&s=${encodeURIComponent(search.word)}` +
         `&type=movie` +
-
-        `&page=${search.page}` +
-
         `&y=${search.year}`;
 
 
@@ -384,7 +218,7 @@ async function searchMovies(
     if (!response.ok) {
 
         throw new Error(
-            `HTTP ${response.status}`
+            `OMDb HTTP error: ${response.status}`
         );
 
     }
@@ -417,14 +251,8 @@ async function getMovieDetails(
 ) {
 
     const url =
-
-        `${API_URL}` +
-
-        `?apikey=${API_KEY}` +
-
-        `&i=${encodeURIComponent(
-            imdbID
-        )}`;
+        `${API_URL}?apikey=${API_KEY}` +
+        `&i=${encodeURIComponent(imdbID)}`;
 
 
     const response =
@@ -434,7 +262,7 @@ async function getMovieDetails(
     if (!response.ok) {
 
         throw new Error(
-            `HTTP ${response.status}`
+            `OMDb HTTP error: ${response.status}`
         );
 
     }
@@ -477,70 +305,111 @@ function isAllowedCountry(
 
 
     const countries =
-        countryString.split(",");
-
-
-    return countries.some(
-        country => {
-
-            const normalized =
-                country
-                    .trim()
-                    .toLowerCase();
-
-
-            return ALLOWED_COUNTRIES.some(
-                allowed =>
-
-                    normalized ===
-                    allowed
+        countryString
+            .split(",")
+            .map(
+                country =>
+                    country
+                        .trim()
                         .toLowerCase()
             );
 
-        }
-    );
 
-}
+    const allowedCountries = [
+
+        // Europe
+
+        "albania",
+        "andorra",
+        "austria",
+        "belarus",
+        "belgium",
+        "bosnia and herzegovina",
+        "bulgaria",
+        "croatia",
+        "cyprus",
+        "czech republic",
+        "czechia",
+        "denmark",
+        "estonia",
+        "finland",
+        "france",
+        "germany",
+        "greece",
+        "hungary",
+        "iceland",
+        "ireland",
+        "italy",
+        "latvia",
+        "lithuania",
+        "luxembourg",
+        "malta",
+        "monaco",
+        "montenegro",
+        "netherlands",
+        "norway",
+        "poland",
+        "portugal",
+        "romania",
+        "russia",
+        "serbia",
+        "slovakia",
+        "slovenia",
+        "spain",
+        "sweden",
+        "switzerland",
+        "turkey",
+        "ukraine",
+        "united kingdom",
+
+        // Japan
+
+        "japan",
+
+        // North America
+
+        "united states",
+        "usa",
+        "canada",
+        "mexico",
+        "guatemala",
+        "belize",
+        "honduras",
+        "el salvador",
+        "nicaragua",
+        "costa rica",
+        "panama",
+        "cuba",
+        "haiti",
+        "dominican republic",
+        "jamaica",
+        "bahamas",
+        "barbados",
+        "trinidad and tobago",
+
+        // South America
+
+        "argentina",
+        "bolivia",
+        "brazil",
+        "chile",
+        "colombia",
+        "ecuador",
+        "guyana",
+        "paraguay",
+        "peru",
+        "suriname",
+        "uruguay",
+        "venezuela"
+
+    ];
 
 
-// ========================================
-// YEAR
-// ========================================
-
-function getMovieYear(
-    movie
-) {
-
-    if (!movie.Year) {
-
-        return null;
-
-    }
-
-
-    /*
-        We deliberately reject
-        movies with ranges such as:
-
-        1999–2001
-
-        because the game needs
-        one exact year.
-    */
-
-    if (
-        !/^\d{4}$/.test(
-            movie.Year
-        )
-    ) {
-
-        return null;
-
-    }
-
-
-    return Number(
-        movie.Year
+    return countries.some(
+        country =>
+            allowedCountries.includes(
+                country
+            )
     );
 
 }
@@ -570,19 +439,24 @@ function isValidMovie(
     }
 
 
-    const year =
-        getMovieYear(
-            movie
-        );
-
+    /*
+        We only accept an exact
+        four-digit year.
+    */
 
     if (
-        year === null
+        !/^\d{4}$/.test(
+            movie.Year
+        )
     ) {
 
         return false;
 
     }
+
+
+    const year =
+        Number(movie.Year);
 
 
     if (
@@ -612,44 +486,25 @@ function isValidMovie(
 
 
 // ========================================
-// GET RANDOM MOVIE
+// FIND RANDOM MOVIE
 // ========================================
 
 async function getRandomMovie() {
 
-    if (
-        API_KEY ===
-        "YOUR_OMDB_API_KEY"
-    ) {
-
-        throw new Error(
-            "Add your OMDb API key to script.js"
-        );
-
-    }
-
-
-    /*
-        We try multiple searches because
-        many random searches will return
-        movies that don't meet our country
-        or year requirements.
-    */
-
     for (
         let attempt = 0;
-        attempt < 25;
+        attempt < 30;
         attempt++
     ) {
 
+        statusElement.textContent =
+            `Finding a movie... ${
+                attempt + 1
+            }/30`;
+
+
         const search =
             getRandomSearch();
-
-
-        statusElement.textContent =
-            `Finding movie... ${
-                attempt + 1
-            }/25`;
 
 
         try {
@@ -670,12 +525,6 @@ async function getRandomMovie() {
             }
 
 
-            /*
-                Rather than always taking
-                the first result, shuffle
-                through the results.
-            */
-
             const shuffled =
                 [...results.Search]
                     .sort(
@@ -690,7 +539,25 @@ async function getRandomMovie() {
                 of shuffled
             ) {
 
-                const movie =
+                /*
+                    Don't allow the same
+                    movie twice.
+                */
+
+                if (
+                    timeline.some(
+                        movie =>
+                            movie.imdbID ===
+                            result.imdbID
+                    )
+                ) {
+
+                    continue;
+
+                }
+
+
+                const details =
                     await getMovieDetails(
                         result.imdbID
                     );
@@ -698,11 +565,11 @@ async function getRandomMovie() {
 
                 if (
                     isValidMovie(
-                        movie
+                        details
                     )
                 ) {
 
-                    return movie;
+                    return details;
 
                 }
 
@@ -712,7 +579,7 @@ async function getRandomMovie() {
 
         catch (error) {
 
-            console.warn(
+            console.error(
                 error
             );
 
@@ -722,36 +589,39 @@ async function getRandomMovie() {
 
 
     throw new Error(
-        "Couldn't find a suitable movie."
+        "Unable to find a suitable movie."
     );
 
 }
 
 
 // ========================================
-// CREATE STARTING GAME
+// START GAME
 // ========================================
 
 async function startGame() {
 
-    gameOver = false;
+    /*
+        IMPORTANT:
+        Hide the game-over screen.
+    */
+
+    resultOverlay.classList.remove(
+        "visible"
+    );
+
 
     score = 0;
+
+    gameOver = false;
+
+    currentMovie = null;
 
     timeline = [];
 
 
     scoreElement.textContent =
-        score;
-
-
-    resultOverlay.classList.add(
-        "hidden"
-    );
-
-
-    statusElement.textContent =
-        "Creating your timeline...";
+        "0";
 
 
     movieTitle.textContent =
@@ -762,8 +632,12 @@ async function startGame() {
         false;
 
 
+    statusElement.className =
+        "status";
+
+
     /*
-        Generate a random starting year.
+        Generate the starting year.
     */
 
     const startingYear =
@@ -784,12 +658,19 @@ async function startGame() {
     });
 
 
+    /*
+        SHOW THE STARTING YEAR
+        IMMEDIATELY.
+    */
+
     renderTimeline();
 
 
-    /*
-        Now get the first movie.
-    */
+    statusElement.textContent =
+        `Your starting year is ${
+            startingYear
+        }. Find a movie to place!`;
+
 
     try {
 
@@ -805,7 +686,7 @@ async function startGame() {
 
 
         statusElement.textContent =
-            error.message;
+            "Could not load a movie. Check your OMDb API key.";
 
     }
 
@@ -813,14 +694,10 @@ async function startGame() {
 
 
 // ========================================
-// LOAD NEXT MOVIE
+// LOAD MOVIE
 // ========================================
 
 async function loadNextMovie() {
-
-    statusElement.textContent =
-        "Finding a movie...";
-
 
     movieCard.draggable =
         false;
@@ -836,6 +713,10 @@ async function loadNextMovie() {
 
     movieCard.draggable =
         true;
+
+
+    statusElement.className =
+        "status";
 
 
     statusElement.textContent =
@@ -855,13 +736,23 @@ function renderTimeline() {
 
 
     /*
-        Sort timeline by year.
+        Sort oldest → newest.
     */
 
     timeline.sort(
         (a, b) =>
             a.year - b.year
     );
+
+
+    const timelineDiv =
+        document.createElement(
+            "div"
+        );
+
+
+    timelineDiv.className =
+        "timeline";
 
 
     const container =
@@ -874,37 +765,22 @@ function renderTimeline() {
         "timeline-container";
 
 
-    /*
-        There is a drop zone before
-        every movie and one after the
-        final movie.
-
-        Example:
-
-        DROP → 1985 → DROP → 1990 → DROP
-    */
-
-
     timeline.forEach(
         (movie, index) => {
 
             /*
-                DROP ZONE
+                Drop zone before movie.
             */
 
-            const dropZone =
+            container.appendChild(
                 createDropZone(
                     index
-                );
-
-
-            container.appendChild(
-                dropZone
+                )
             );
 
 
             /*
-                MOVIE
+                Movie marker.
             */
 
             const movieElement =
@@ -922,29 +798,30 @@ function renderTimeline() {
 
 
     /*
-        Final drop zone
+        Final drop zone.
     */
 
-    const finalDropZone =
+    container.appendChild(
         createDropZone(
             timeline.length
-        );
+        )
+    );
 
 
-    container.appendChild(
-        finalDropZone
+    timelineDiv.appendChild(
+        container
     );
 
 
     timelineElement.appendChild(
-        container
+        timelineDiv
     );
 
 }
 
 
 // ========================================
-// CREATE TIMELINE MOVIE
+// TIMELINE MOVIE
 // ========================================
 
 function createTimelineMovie(
@@ -959,6 +836,17 @@ function createTimelineMovie(
 
     element.className =
         "timeline-movie";
+
+
+    if (
+        movie.starting
+    ) {
+
+        element.classList.add(
+            "starting"
+        );
+
+    }
 
 
     const dot =
@@ -985,20 +873,6 @@ function createTimelineMovie(
         movie.year;
 
 
-    const title =
-        document.createElement(
-            "div"
-        );
-
-
-    title.className =
-        "timeline-title";
-
-
-    title.textContent =
-        movie.title;
-
-
     element.appendChild(
         dot
     );
@@ -1010,14 +884,27 @@ function createTimelineMovie(
 
 
     /*
-        Only show the title of
-        movies that have already
-        been successfully placed.
+        Don't show "Starting Year"
+        as a movie title.
     */
 
     if (
         !movie.starting
     ) {
+
+        const title =
+            document.createElement(
+                "div"
+            );
+
+
+        title.className =
+            "timeline-title";
+
+
+        title.textContent =
+            movie.title;
+
 
         element.appendChild(
             title
@@ -1032,7 +919,7 @@ function createTimelineMovie(
 
 
 // ========================================
-// CREATE DROP ZONE
+// DROP ZONE
 // ========================================
 
 function createDropZone(
@@ -1049,31 +936,26 @@ function createDropZone(
         "drop-zone";
 
 
-    zone.dataset.position =
-        position;
-
-
-    /*
-        Drag enters the zone.
-    */
-
     zone.addEventListener(
         "dragover",
         event => {
 
             event.preventDefault();
 
-            zone.classList.add(
-                "active"
-            );
+            if (
+                !gameOver &&
+                currentMovie
+            ) {
+
+                zone.classList.add(
+                    "active"
+                );
+
+            }
 
         }
     );
 
-
-    /*
-        Drag leaves.
-    */
 
     zone.addEventListener(
         "dragleave",
@@ -1087,10 +969,6 @@ function createDropZone(
     );
 
 
-    /*
-        Movie dropped.
-    */
-
     zone.addEventListener(
         "drop",
         event => {
@@ -1103,19 +981,13 @@ function createDropZone(
 
 
             if (
-                !currentMovie ||
-                gameOver
+                gameOver ||
+                !currentMovie
             ) {
 
                 return;
 
             }
-
-
-            const position =
-                Number(
-                    zone.dataset.position
-                );
 
 
             checkPlacement(
@@ -1132,7 +1004,7 @@ function createDropZone(
 
 
 // ========================================
-// DRAG START
+// DRAG EVENTS
 // ========================================
 
 movieCard.addEventListener(
@@ -1163,10 +1035,6 @@ movieCard.addEventListener(
 );
 
 
-// ========================================
-// DRAG END
-// ========================================
-
 movieCard.addEventListener(
     "dragend",
     () => {
@@ -1183,141 +1051,89 @@ movieCard.addEventListener(
 // CHECK PLACEMENT
 // ========================================
 
-async function checkPlacement(
+function checkPlacement(
     position
 ) {
 
-    if (
-        !currentMovie ||
-        gameOver
-    ) {
-
-        return;
-
-    }
-
-
-    /*
-        We determine the allowed range
-        for this position.
-
-        Example:
-
-        1985 | 1990
-
-        The movie is correct if:
-
-        1985 < movie year < 1990
-
-        We also allow equality at the
-        boundaries, although movies with
-        the exact same year require a
-        special rule.
-    */
+    const movieYear =
+        Number(
+            currentMovie.Year
+        );
 
 
     let correct = false;
 
 
+    /*
+        Before the oldest movie.
+    */
+
     if (
-        timeline.length === 1
+        position === 0
     ) {
 
-        /*
-            Only the starting year exists.
-
-            Position 0 = before
-            Position 1 = after
-        */
-
-        if (
-            position === 0
-        ) {
-
-            correct =
-                Number(currentMovie.Year) <
-                timeline[0].year;
-
-        }
-
-        else {
-
-            correct =
-                Number(currentMovie.Year) >
-                timeline[0].year;
-
-        }
+        correct =
+            movieYear <=
+            timeline[0].year;
 
     }
 
+
+    /*
+        After the newest movie.
+    */
+
+    else if (
+        position === timeline.length
+    ) {
+
+        correct =
+            movieYear >=
+            timeline[
+                timeline.length - 1
+            ].year;
+
+    }
+
+
+    /*
+        Between two movies.
+    */
+
     else {
 
-        /*
-            Timeline is already sorted.
-        */
-
-        if (
-            position === 0
-        ) {
-
-            correct =
-                Number(currentMovie.Year) <=
-                timeline[0].year;
-
-        }
-
-        else if (
-            position === timeline.length
-        ) {
-
-            correct =
-                Number(currentMovie.Year) >=
-                timeline[
-                    timeline.length - 1
-                ].year;
-
-        }
-
-        else {
-
-            const previous =
-                timeline[
-                    position - 1
-                ].year;
+        const previousYear =
+            timeline[
+                position - 1
+            ].year;
 
 
-            const next =
-                timeline[
-                    position
-                ].year;
+        const nextYear =
+            timeline[
+                position
+            ].year;
 
 
-            correct =
+        correct =
 
-                Number(currentMovie.Year) >=
-                previous &&
+            movieYear >=
+            previousYear &&
 
-                Number(currentMovie.Year) <=
-                next;
-
-        }
+            movieYear <=
+            nextYear;
 
     }
 
 
     if (correct) {
 
-        await handleCorrectAnswer(
-            position
-        );
+        handleCorrectAnswer();
 
     }
 
     else {
 
-        handleWrongAnswer(
-            position
-        );
+        handleWrongAnswer();
 
     }
 
@@ -1325,17 +1141,19 @@ async function checkPlacement(
 
 
 // ========================================
-// CORRECT
+// CORRECT ANSWER
 // ========================================
 
-async function handleCorrectAnswer(
-    position
-) {
+async function handleCorrectAnswer() {
 
     score++;
 
     scoreElement.textContent =
         score;
+
+
+    statusElement.className =
+        "status success";
 
 
     statusElement.textContent =
@@ -1346,21 +1164,18 @@ async function handleCorrectAnswer(
         }. +1 point`;
 
 
-    statusElement.className =
-        "status success";
-
-
-    /*
-        Add movie to timeline.
-    */
-
     timeline.push({
 
         title:
             currentMovie.Title,
 
         year:
-            currentMovie.Year,
+            Number(
+                currentMovie.Year
+            ),
+
+        imdbID:
+            currentMovie.imdbID,
 
         starting:
             false
@@ -1371,10 +1186,6 @@ async function handleCorrectAnswer(
     renderTimeline();
 
 
-    /*
-        Temporarily disable the card.
-    */
-
     movieCard.draggable =
         false;
 
@@ -1383,21 +1194,17 @@ async function handleCorrectAnswer(
         null;
 
 
-    /*
-        Wait a moment so the player
-        can see the successful result.
-    */
-
-    await wait(900);
+    await wait(1000);
 
 
-    statusElement.className =
-        "status";
+    if (
+        gameOver
+    ) {
 
+        return;
 
-    /*
-        Get next movie.
-    */
+    }
+
 
     try {
 
@@ -1413,7 +1220,7 @@ async function handleCorrectAnswer(
 
 
         statusElement.textContent =
-            error.message;
+            "Could not load the next movie.";
 
     }
 
@@ -1421,54 +1228,33 @@ async function handleCorrectAnswer(
 
 
 // ========================================
-// WRONG
+// WRONG ANSWER
 // ========================================
 
-function handleWrongAnswer(
-    position
-) {
+function handleWrongAnswer() {
 
-    gameOver =
-        true;
+    gameOver = true;
 
 
     movieCard.draggable =
         false;
 
 
-    /*
-        Find the correct position
-        visually so we can explain
-        what happened.
-    */
-
-    const actualYear =
-        currentMovie.Year;
+    statusElement.className =
+        "status error";
 
 
     statusElement.textContent =
         `✗ Wrong! ${
             currentMovie.Title
         } was released in ${
-            actualYear
+            currentMovie.Year
         }.`;
 
-    statusElement.className =
-        "status error";
-
-
-    /*
-        Show the movie's real year
-        before ending the game.
-    */
 
     setTimeout(
-        () => {
-
-            showGameOver();
-
-        },
-        800
+        showGameOver,
+        900
     );
 
 }
@@ -1480,16 +1266,7 @@ function handleWrongAnswer(
 
 function showGameOver() {
 
-    resultIcon.textContent =
-        "❌";
-
-
-    resultTitle.textContent =
-        "Game Over";
-
-
     resultMessage.innerHTML =
-
         `<strong>${
             currentMovie.Title
         }</strong> was released in ${
@@ -1501,8 +1278,12 @@ function showGameOver() {
         score;
 
 
-    resultOverlay.classList.remove(
-        "hidden"
+    /*
+        Explicitly show the overlay.
+    */
+
+    resultOverlay.classList.add(
+        "visible"
     );
 
 }

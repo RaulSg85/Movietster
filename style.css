@@ -1,7 +1,7 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 
@@ -9,9 +9,9 @@
 
     --background: #080808;
 
-    --card: #121212;
+    --card: #151515;
 
-    --card-light: #1c1c1c;
+    --card-light: #202020;
 
     --text: #ffffff;
 
@@ -23,14 +23,10 @@
 
     --success: #35d07f;
 
-    --border: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.12);
 
 }
 
-
-/* ========================================
-   BODY
-======================================== */
 
 body {
 
@@ -39,8 +35,8 @@ body {
     background:
 
         radial-gradient(
-            circle at 50% -10%,
-            rgba(229, 9, 20, 0.25),
+            circle at 50% 0%,
+            rgba(229, 9, 20, 0.18),
             transparent 45%
         ),
 
@@ -53,40 +49,10 @@ body {
         Helvetica,
         sans-serif;
 
-    display: flex;
-
-    justify-content: center;
-
     padding: 40px 20px;
 
 }
 
-
-.background-glow {
-
-    position: fixed;
-
-    width: 500px;
-
-    height: 500px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(229, 9, 20, 0.08);
-
-    filter: blur(120px);
-
-    pointer-events: none;
-
-    z-index: -1;
-
-}
-
-
-/* ========================================
-   APP
-======================================== */
 
 .app {
 
@@ -94,44 +60,31 @@ body {
 
     max-width: 1200px;
 
+    margin: auto;
+
     text-align: center;
 
 }
 
 
-/* ========================================
+/* ==============================
    HEADER
-======================================== */
+============================== */
 
 .header {
 
-    margin-bottom: 40px;
+    margin-bottom: 45px;
 
 }
 
 
 .logo {
 
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 12px;
-
-    font-size: 28px;
+    font-size: 30px;
 
     font-weight: 900;
 
     letter-spacing: 3px;
-
-}
-
-
-.logo span:first-child {
-
-    font-size: 32px;
 
 }
 
@@ -149,13 +102,7 @@ body {
 
 .score {
 
-    margin: 25px auto 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
+    margin-top: 22px;
 
     color: var(--muted);
 
@@ -170,89 +117,76 @@ body {
 
 .score span {
 
+    display: block;
+
+    margin-top: 4px;
+
     color: white;
 
-    font-size: 38px;
+    font-size: 36px;
 
     letter-spacing: 0;
 
 }
 
 
-/* ========================================
-   GAME
-======================================== */
-
-.game {
-
-    width: 100%;
-
-}
-
-
-/* ========================================
+/* ==============================
    CURRENT MOVIE
-======================================== */
+============================== */
 
 .current-movie-area {
 
-    margin-bottom: 50px;
+    margin-bottom: 55px;
 
 }
 
 
 .eyebrow {
 
+    margin-bottom: 15px;
+
     color: var(--accent);
 
     font-size: 11px;
 
-    font-weight: 900;
+    font-weight: bold;
 
-    letter-spacing: 3px;
-
-    margin-bottom: 15px;
+    letter-spacing: 4px;
 
 }
 
 
 .movie-card {
 
-    width: min(500px, 100%);
+    width: min(600px, 100%);
 
-    min-height: 150px;
+    min-height: 170px;
 
     margin: auto;
 
-    padding: 25px;
+    padding: 30px;
 
-    border-radius: 16px;
+    border-radius: 18px;
 
     background:
-
         linear-gradient(
             145deg,
-            #1d1d1d,
-            #101010
+            #1b1516,
+            #111111
         );
 
     border: 1px solid var(--border);
 
     box-shadow:
-
-        0 20px 50px
-        rgba(0, 0, 0, 0.45);
+        0 20px 60px
+        rgba(0, 0, 0, 0.5);
 
     cursor: grab;
 
     user-select: none;
 
     transition:
-
         transform 0.2s,
-
-        box-shadow 0.2s,
-
         opacity 0.2s;
 
 }
@@ -263,31 +197,24 @@ body {
     transform:
         translateY(-4px);
 
-    box-shadow:
-
-        0 25px 60px
-        rgba(0, 0, 0, 0.6);
-
 }
 
 
 .movie-card.dragging {
 
-    opacity: 0.45;
+    opacity: 0.4;
 
     transform:
         scale(0.95);
-
-    cursor: grabbing;
 
 }
 
 
 .movie-icon {
 
-    font-size: 30px;
+    font-size: 28px;
 
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 
 }
 
@@ -295,40 +222,38 @@ body {
 .movie-card h1 {
 
     font-size:
-        clamp(28px, 5vw, 42px);
+        clamp(30px, 5vw, 48px);
 
-    line-height: 1;
+    line-height: 1.1;
 
 }
 
 
 .drag-text {
 
-    margin-top: 12px;
+    margin-top: 15px;
 
-    color: #666666;
+    color: #777;
 
     font-size: 12px;
 
 }
 
 
-/* ========================================
+/* ==============================
    TIMELINE
-======================================== */
+============================== */
 
 .timeline-section {
 
     width: 100%;
 
-    overflow-x: auto;
-
-    padding: 20px 0 35px;
-
 }
 
 
 .timeline-label {
+
+    margin-bottom: 25px;
 
     color: var(--muted);
 
@@ -336,64 +261,30 @@ body {
 
     font-weight: bold;
 
-    letter-spacing: 3px;
-
-    margin-bottom: 25px;
+    letter-spacing: 4px;
 
 }
 
-
-/*
-    The timeline is horizontal.
-    We use a flex layout with insertion
-    zones between movies.
-*/
 
 .timeline {
 
     display: flex;
 
-    align-items: center;
-
     justify-content: center;
 
-    min-width: max-content;
+    align-items: center;
 
-    padding: 50px 30px 20px;
+    overflow-x: auto;
 
-}
-
-
-/* ========================================
-   TIMELINE LINE
-======================================== */
-
-.timeline-line {
-
-    position: absolute;
-
-    height: 4px;
-
-    background: #333;
-
-    left: 0;
-
-    right: 0;
-
-    top: 50%;
-
-    transform:
-        translateY(-50%);
-
-    border-radius: 4px;
+    padding: 40px 20px 30px;
 
 }
 
+
+/* Container */
 
 .timeline-container {
 
-    position: relative;
-
     display: flex;
 
     align-items: center;
@@ -401,25 +292,25 @@ body {
 }
 
 
-/* ========================================
-   INSERTION ZONES
-======================================== */
+/* ==============================
+   DROP ZONES
+============================== */
 
 .drop-zone {
 
-    width: 80px;
+    position: relative;
+
+    width: 90px;
 
     height: 130px;
-
-    flex-shrink: 0;
-
-    position: relative;
 
     display: flex;
 
     justify-content: center;
 
     align-items: center;
+
+    flex-shrink: 0;
 
 }
 
@@ -428,31 +319,31 @@ body {
 
     content: "";
 
-    position: absolute;
-
     width: 4px;
 
-    height: 30px;
+    height: 35px;
 
-    border-radius: 5px;
+    border-radius: 10px;
 
     background: #333;
 
-    transition: 0.2s;
+    transition:
+        height 0.2s,
+        background 0.2s,
+        box-shadow 0.2s;
 
 }
 
 
 .drop-zone.active::before {
 
-    height: 80px;
+    height: 90px;
 
     background: var(--accent);
 
     box-shadow:
-
-        0 0 20px
-        rgba(229, 9, 20, 0.7);
+        0 0 25px
+        rgba(229, 9, 20, 0.8);
 
 }
 
@@ -463,7 +354,7 @@ body {
 
     position: absolute;
 
-    top: -20px;
+    top: 5px;
 
     color: var(--accent);
 
@@ -476,15 +367,13 @@ body {
 }
 
 
-/* ========================================
-   TIMELINE MOVIE
-======================================== */
+/* ==============================
+   TIMELINE MOVIES
+============================== */
 
 .timeline-movie {
 
-    position: relative;
-
-    width: 120px;
+    width: 130px;
 
     flex-shrink: 0;
 
@@ -495,33 +384,28 @@ body {
 
 .timeline-dot {
 
-    width: 16px;
+    width: 18px;
 
-    height: 16px;
+    height: 18px;
+
+    margin: auto;
 
     border-radius: 50%;
 
     background: white;
 
-    border: 4px solid #080808;
-
     box-shadow:
-        0 0 0 2px white;
-
-    margin: auto;
-
-    position: relative;
-
-    z-index: 2;
+        0 0 0 3px #111,
+        0 0 0 5px white;
 
 }
 
 
 .timeline-year {
 
-    margin-top: 12px;
+    margin-top: 14px;
 
-    font-size: 16px;
+    font-size: 22px;
 
     font-weight: 900;
 
@@ -530,7 +414,7 @@ body {
 
 .timeline-title {
 
-    margin-top: 5px;
+    margin-top: 6px;
 
     color: var(--muted);
 
@@ -538,22 +422,38 @@ body {
 
     line-height: 1.3;
 
-    max-width: 110px;
+}
 
-    margin-left: auto;
 
-    margin-right: auto;
+/* Starting year */
+
+.timeline-movie.starting {
+
+    transform:
+        scale(1.15);
 
 }
 
 
-/* ========================================
+.timeline-movie.starting
+.timeline-dot {
+
+    background: var(--accent);
+
+    box-shadow:
+        0 0 0 3px #111,
+        0 0 0 5px var(--accent);
+
+}
+
+
+/* ==============================
    STATUS
-======================================== */
+============================== */
 
 .status {
 
-    min-height: 20px;
+    min-height: 22px;
 
     margin-top: 20px;
 
@@ -578,9 +478,9 @@ body {
 }
 
 
-/* ========================================
-   NEW GAME BUTTON
-======================================== */
+/* ==============================
+   BUTTON
+============================== */
 
 .new-game-button {
 
@@ -588,39 +488,37 @@ body {
 
     padding: 12px 25px;
 
-    border-radius: 8px;
-
     border: 1px solid #333;
+
+    border-radius: 8px;
 
     background: transparent;
 
     color: #aaa;
 
-    font-size: 12px;
+    font-size: 11px;
 
     font-weight: bold;
 
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 
     cursor: pointer;
-
-    transition: 0.2s;
 
 }
 
 
 .new-game-button:hover {
 
-    color: white;
-
     border-color: white;
+
+    color: white;
 
 }
 
 
-/* ========================================
-   OVERLAY
-======================================== */
+/* ==============================
+   GAME OVER
+============================== */
 
 .overlay {
 
@@ -628,13 +526,7 @@ body {
 
     inset: 0;
 
-    background:
-        rgba(0, 0, 0, 0.85);
-
-    backdrop-filter:
-        blur(10px);
-
-    display: flex;
+    display: none;
 
     justify-content: center;
 
@@ -642,21 +534,23 @@ body {
 
     padding: 20px;
 
-    z-index: 100;
+    background:
+        rgba(0, 0, 0, 0.82);
+
+    backdrop-filter:
+        blur(10px);
+
+    z-index: 1000;
 
 }
 
 
-.hidden {
+.overlay.visible {
 
-    display: none;
+    display: flex;
 
 }
 
-
-/* ========================================
-   RESULT CARD
-======================================== */
 
 .result-card {
 
@@ -679,7 +573,7 @@ body {
 
 .result-icon {
 
-    font-size: 50px;
+    font-size: 48px;
 
     margin-bottom: 15px;
 
@@ -688,9 +582,9 @@ body {
 
 .result-card h2 {
 
-    font-size: 32px;
-
     margin-bottom: 15px;
+
+    font-size: 32px;
 
 }
 
@@ -708,12 +602,6 @@ body {
 
     margin: 30px 0;
 
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
-
     color: #777;
 
     font-size: 11px;
@@ -726,6 +614,10 @@ body {
 
 
 .final-score strong {
+
+    display: block;
+
+    margin-top: 5px;
 
     color: white;
 
@@ -750,15 +642,13 @@ body {
 
     color: white;
 
-    font-size: 13px;
+    font-size: 12px;
 
-    font-weight: 900;
+    font-weight: bold;
 
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 
     cursor: pointer;
-
-    transition: 0.2s;
 
 }
 
@@ -770,9 +660,9 @@ body {
 }
 
 
-/* ========================================
+/* ==============================
    FOOTER
-======================================== */
+============================== */
 
 footer {
 
@@ -785,9 +675,9 @@ footer {
 }
 
 
-/* ========================================
+/* ==============================
    MOBILE
-======================================== */
+============================== */
 
 @media (max-width: 700px) {
 
@@ -800,16 +690,7 @@ footer {
 
     .logo {
 
-        font-size: 21px;
-
-        letter-spacing: 2px;
-
-    }
-
-
-    .movie-card {
-
-        min-height: 130px;
+        font-size: 22px;
 
     }
 
