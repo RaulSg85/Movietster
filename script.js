@@ -1,5 +1,5 @@
 // ========================================
-// OMDb SETTINGS
+// OMDb
 // ========================================
 
 const API_KEY = "42e69fd5";
@@ -8,41 +8,22 @@ const API_URL = "https://www.omdbapi.com/";
 
 
 // ========================================
-// MOVIE YEAR RANGE
+// YEAR RANGE
 // ========================================
 
 const MIN_YEAR = 1920;
 
-const MAX_YEAR = new Date().getFullYear();
+const MAX_YEAR =
+    new Date().getFullYear();
 
 
 // ========================================
 // ALLOWED COUNTRIES
 // ========================================
-//
-// We allow:
-// Europe
-// Japan
-// North America
-// South America
-//
-// Movies can have multiple countries.
-// For example:
-//
-// "United States, United Kingdom"
-// "France, Germany"
-// "Japan, United States"
-//
-// As long as at least one of the
-// countries belongs to our allowed
-// regions, the movie can be accepted.
-//
 
 const ALLOWED_COUNTRIES = [
 
-    // -------------------------
     // EUROPE
-    // -------------------------
 
     "Albania",
     "Andorra",
@@ -94,22 +75,16 @@ const ALLOWED_COUNTRIES = [
     "UK",
     "Vatican City",
 
-    // -------------------------
     // JAPAN
-    // -------------------------
 
     "Japan",
 
-    // -------------------------
     // NORTH AMERICA
-    // -------------------------
 
     "United States",
     "USA",
     "United States of America",
-
     "Canada",
-
     "Mexico",
 
     "Guatemala",
@@ -129,9 +104,7 @@ const ALLOWED_COUNTRIES = [
     "Barbados",
     "Trinidad and Tobago",
 
-    // -------------------------
     // SOUTH AMERICA
-    // -------------------------
 
     "Argentina",
     "Bolivia",
@@ -152,12 +125,6 @@ const ALLOWED_COUNTRIES = [
 // ========================================
 // SEARCH WORDS
 // ========================================
-//
-// OMDb requires an "s" search term.
-//
-// We use lots of different words to
-// create a large pool of movies.
-//
 
 const SEARCH_WORDS = [
 
@@ -177,117 +144,88 @@ const SEARCH_WORDS = [
     "one",
     "two",
     "three",
-
     "war",
     "king",
     "queen",
-
     "boy",
     "girl",
-
     "city",
     "house",
     "road",
-
     "fire",
     "water",
-
     "black",
     "white",
     "red",
     "blue",
     "green",
-
     "star",
     "dream",
     "heart",
     "lost",
-
     "new",
     "old",
-
     "great",
     "little",
     "big",
-
     "american",
     "europe",
     "japan",
-
     "summer",
     "winter",
-
     "school",
     "family",
     "friend",
-
     "music",
     "story",
     "secret",
-
     "death",
     "blood",
-
     "future",
     "past",
-
     "space",
     "earth",
     "planet",
-
     "ghost",
     "game",
     "killer",
     "hero",
-
-    "road",
-    "street",
-    "town",
-
-    "dream",
-    "dreams",
-
     "father",
     "mother",
     "child",
-
     "brother",
     "sister",
-
-    "king",
     "princess",
-
     "river",
     "mountain",
-
     "train",
     "car",
-
     "hotel",
-    "restaurant",
-
-    "summer",
-    "winter",
-
-    "rain",
-    "sun",
-
-    "moon",
-    "star",
-
-    "journey",
     "journey"
 
 ];
 
 
 // ========================================
-// DOM ELEMENTS
+// GAME STATE
 // ========================================
 
-const randomButton =
+let timeline = [];
+
+let currentMovie = null;
+
+let score = 0;
+
+let gameOver = false;
+
+
+// ========================================
+// DOM
+// ========================================
+
+const movieCard =
     document.getElementById(
-        "randomButton"
+        "movieCard"
     );
 
 
@@ -297,75 +235,63 @@ const movieTitle =
     );
 
 
-const movieYear =
+const timelineElement =
     document.getElementById(
-        "movieYear"
+        "timeline"
     );
 
 
-const movieRuntime =
+const scoreElement =
     document.getElementById(
-        "movieRuntime"
+        "score"
     );
 
 
-const movieRating =
-    document.getElementById(
-        "movieRating"
-    );
-
-
-const movieGenre =
-    document.getElementById(
-        "movieGenre"
-    );
-
-
-const moviePlot =
-    document.getElementById(
-        "moviePlot"
-    );
-
-
-const movieDirector =
-    document.getElementById(
-        "movieDirector"
-    );
-
-
-const movieActors =
-    document.getElementById(
-        "movieActors"
-    );
-
-
-const movieCountry =
-    document.getElementById(
-        "movieCountry"
-    );
-
-
-const poster =
-    document.getElementById(
-        "poster"
-    );
-
-
-const posterPlaceholder =
-    document.getElementById(
-        "posterPlaceholder"
-    );
-
-
-const imdbLink =
-    document.getElementById(
-        "imdbLink"
-    );
-
-
-const statusText =
+const statusElement =
     document.getElementById(
         "status"
+    );
+
+
+const newGameButton =
+    document.getElementById(
+        "newGameButton"
+    );
+
+
+const resultOverlay =
+    document.getElementById(
+        "resultOverlay"
+    );
+
+
+const resultIcon =
+    document.getElementById(
+        "resultIcon"
+    );
+
+
+const resultTitle =
+    document.getElementById(
+        "resultTitle"
+    );
+
+
+const resultMessage =
+    document.getElementById(
+        "resultMessage"
+    );
+
+
+const finalScore =
+    document.getElementById(
+        "finalScore"
+    );
+
+
+const playAgainButton =
+    document.getElementById(
+        "playAgainButton"
     );
 
 
@@ -373,7 +299,10 @@ const statusText =
 // RANDOM NUMBER
 // ========================================
 
-function randomNumber(min, max) {
+function randomNumber(
+    min,
+    max
+) {
 
     return Math.floor(
 
@@ -415,11 +344,9 @@ function getRandomSearch() {
 
 
     return {
-
         word,
         year,
         page
-
     };
 
 }
@@ -429,7 +356,9 @@ function getRandomSearch() {
 // SEARCH OMDb
 // ========================================
 
-async function searchMovies(search) {
+async function searchMovies(
+    search
+) {
 
     const url =
 
@@ -455,7 +384,7 @@ async function searchMovies(search) {
     if (!response.ok) {
 
         throw new Error(
-            `HTTP error: ${response.status}`
+            `HTTP ${response.status}`
         );
 
     }
@@ -480,7 +409,7 @@ async function searchMovies(search) {
 
 
 // ========================================
-// GET MOVIE DETAILS
+// MOVIE DETAILS
 // ========================================
 
 async function getMovieDetails(
@@ -495,9 +424,7 @@ async function getMovieDetails(
 
         `&i=${encodeURIComponent(
             imdbID
-        )}` +
-
-        `&plot=full`;
+        )}`;
 
 
     const response =
@@ -507,7 +434,7 @@ async function getMovieDetails(
     if (!response.ok) {
 
         throw new Error(
-            `HTTP error: ${response.status}`
+            `HTTP ${response.status}`
         );
 
     }
@@ -521,10 +448,7 @@ async function getMovieDetails(
         data.Response === "False"
     ) {
 
-        throw new Error(
-            data.Error ||
-            "Movie not found"
-        );
+        return null;
 
     }
 
@@ -535,22 +459,7 @@ async function getMovieDetails(
 
 
 // ========================================
-// NORMALIZE COUNTRY
-// ========================================
-
-function normalizeCountry(
-    country
-) {
-
-    return country
-        .trim()
-        .toLowerCase();
-
-}
-
-
-// ========================================
-// CHECK COUNTRY
+// COUNTRY CHECK
 // ========================================
 
 function isAllowedCountry(
@@ -575,20 +484,18 @@ function isAllowedCountry(
         country => {
 
             const normalized =
-                normalizeCountry(
-                    country
-                );
+                country
+                    .trim()
+                    .toLowerCase();
 
 
-            return ALLOWED_COUNTRIES
-                .some(
-                    allowed =>
+            return ALLOWED_COUNTRIES.some(
+                allowed =>
 
-                        normalized ===
-                        normalizeCountry(
-                            allowed
-                        )
-                );
+                    normalized ===
+                    allowed
+                        .toLowerCase()
+            );
 
         }
     );
@@ -597,57 +504,50 @@ function isAllowedCountry(
 
 
 // ========================================
-// CHECK YEAR
+// YEAR
 // ========================================
 
-function isAllowedYear(
+function getMovieYear(
     movie
 ) {
 
     if (!movie.Year) {
 
-        return false;
+        return null;
 
     }
 
 
-    // OMDb can sometimes return
-    // values such as:
-    //
-    // "1999"
-    // "1999–2001"
-    //
-    // We only care about the first year.
+    /*
+        We deliberately reject
+        movies with ranges such as:
 
-    const yearMatch =
-        movie.Year.match(
-            /\d{4}/
-        );
+        1999–2001
 
+        because the game needs
+        one exact year.
+    */
 
-    if (!yearMatch) {
+    if (
+        !/^\d{4}$/.test(
+            movie.Year
+        )
+    ) {
 
-        return false;
+        return null;
 
     }
 
 
-    const year =
-        Number(
-            yearMatch[0]
-        );
-
-
-    return (
-        year >= MIN_YEAR &&
-        year <= MAX_YEAR
+    return Number(
+        movie.Year
     );
 
 }
 
 
 // ========================================
-// CHECK IF VALID MOVIE
+// VALID MOVIE
 // ========================================
 
 function isValidMovie(
@@ -661,8 +561,6 @@ function isValidMovie(
     }
 
 
-    // Must be a movie.
-
     if (
         movie.Type !== "movie"
     ) {
@@ -672,11 +570,14 @@ function isValidMovie(
     }
 
 
-    // Must be between
-    // 1920 and current year.
+    const year =
+        getMovieYear(
+            movie
+        );
+
 
     if (
-        !isAllowedYear(movie)
+        year === null
     ) {
 
         return false;
@@ -684,8 +585,15 @@ function isValidMovie(
     }
 
 
-    // Must be from one of
-    // our allowed regions.
+    if (
+        year < MIN_YEAR ||
+        year > MAX_YEAR
+    ) {
+
+        return false;
+
+    }
+
 
     if (
         !isAllowedCountry(
@@ -704,131 +612,6 @@ function isValidMovie(
 
 
 // ========================================
-// DISPLAY MOVIE
-// ========================================
-
-function displayMovie(
-    movie
-) {
-
-    movieTitle.textContent =
-        movie.Title ||
-        "Unknown Title";
-
-
-    movieYear.textContent =
-        `🎬 ${movie.Year || "—"}`;
-
-
-    movieRuntime.textContent =
-        `⏱ ${movie.Runtime || "—"}`;
-
-
-    movieRating.textContent =
-        `⭐ ${
-            movie.imdbRating &&
-            movie.imdbRating !== "N/A"
-                ? movie.imdbRating
-                : "N/A"
-        }`;
-
-
-    movieGenre.textContent =
-        movie.Genre ||
-        "Genre unknown";
-
-
-    moviePlot.textContent =
-
-        movie.Plot &&
-        movie.Plot !== "N/A"
-
-            ? movie.Plot
-
-            : "No plot information available.";
-
-
-    movieDirector.textContent =
-        movie.Director ||
-        "Unknown";
-
-
-    movieActors.textContent =
-        movie.Actors ||
-        "Unknown";
-
-
-    movieCountry.textContent =
-        movie.Country ||
-        "Unknown";
-
-
-    // -------------------------
-    // POSTER
-    // -------------------------
-
-    if (
-
-        movie.Poster &&
-        movie.Poster !== "N/A"
-
-    ) {
-
-        poster.src =
-            movie.Poster;
-
-
-        poster.style.display =
-            "block";
-
-
-        posterPlaceholder.style.display =
-            "none";
-
-    }
-
-    else {
-
-        poster.style.display =
-            "none";
-
-
-        posterPlaceholder.style.display =
-            "flex";
-
-    }
-
-
-    // -------------------------
-    // IMDb
-    // -------------------------
-
-    if (
-        movie.imdbID
-    ) {
-
-        imdbLink.href =
-            `https://www.imdb.com/title/${
-                movie.imdbID
-            }/`;
-
-
-        imdbLink.style.display =
-            "inline-block";
-
-    }
-
-    else {
-
-        imdbLink.style.display =
-            "none";
-
-    }
-
-}
-
-
-// ========================================
 // GET RANDOM MOVIE
 // ========================================
 
@@ -839,167 +622,180 @@ async function getRandomMovie() {
         "YOUR_OMDB_API_KEY"
     ) {
 
-        statusText.textContent =
-            "Add your OMDb API key to script.js first.";
-
-        return;
+        throw new Error(
+            "Add your OMDb API key to script.js"
+        );
 
     }
 
 
-    randomButton.disabled =
-        true;
+    /*
+        We try multiple searches because
+        many random searches will return
+        movies that don't meet our country
+        or year requirements.
+    */
+
+    for (
+        let attempt = 0;
+        attempt < 25;
+        attempt++
+    ) {
+
+        const search =
+            getRandomSearch();
 
 
-    document.body.classList.add(
-        "loading"
-    );
+        statusElement.textContent =
+            `Finding movie... ${
+                attempt + 1
+            }/25`;
 
 
-    statusText.textContent =
-        "Looking for a movie...";
+        try {
+
+            const results =
+                await searchMovies(
+                    search
+                );
 
 
-    try {
+            if (
+                !results ||
+                !results.Search
+            ) {
 
-        let validMovie =
-            null;
-
-
-        let attempts =
-            0;
-
-
-        /*
-         * We try multiple searches.
-         *
-         * This is necessary because OMDb's
-         * search API doesn't provide a
-         * country/region filter.
-         *
-         * We therefore search and then
-         * inspect the full movie details.
-         */
-
-
-        while (
-
-            validMovie === null &&
-            attempts < 20
-
-        ) {
-
-            attempts++;
-
-
-            const search =
-                getRandomSearch();
-
-
-            statusText.textContent =
-                `Searching for a movie... ${
-                    attempts
-                }/20`;
-
-
-            try {
-
-                const searchResults =
-                    await searchMovies(
-                        search
-                    );
-
-
-                if (
-                    !searchResults ||
-                    !searchResults.Search
-                ) {
-
-                    continue;
-
-                }
-
-
-                // Pick a random result.
-
-                const randomResult =
-
-                    searchResults.Search[
-                        randomNumber(
-                            0,
-                            searchResults.Search.length - 1
-                        )
-                    ];
-
-
-                statusText.textContent =
-                    "Checking movie...";
-
-
-                const movie =
-                    await getMovieDetails(
-                        randomResult.imdbID
-                    );
-
-
-                // Check year + country.
-
-                if (
-                    isValidMovie(movie)
-                ) {
-
-                    validMovie =
-                        movie;
-
-                }
+                continue;
 
             }
 
-            catch (error) {
 
-                console.warn(
-                    "Search attempt failed:",
-                    error
-                );
+            /*
+                Rather than always taking
+                the first result, shuffle
+                through the results.
+            */
+
+            const shuffled =
+                [...results.Search]
+                    .sort(
+                        () =>
+                            Math.random() -
+                            0.5
+                    );
+
+
+            for (
+                const result
+                of shuffled
+            ) {
+
+                const movie =
+                    await getMovieDetails(
+                        result.imdbID
+                    );
+
+
+                if (
+                    isValidMovie(
+                        movie
+                    )
+                ) {
+
+                    return movie;
+
+                }
 
             }
 
         }
 
+        catch (error) {
 
-        // -------------------------
-        // NO MOVIE FOUND
-        // -------------------------
-
-        if (!validMovie) {
-
-            throw new Error(
-
-                "Couldn't find a suitable movie. " +
-                "Try again."
-
+            console.warn(
+                error
             );
 
         }
 
+    }
 
-        // -------------------------
-        // DISPLAY
-        // -------------------------
 
-        displayMovie(
-            validMovie
+    throw new Error(
+        "Couldn't find a suitable movie."
+    );
+
+}
+
+
+// ========================================
+// CREATE STARTING GAME
+// ========================================
+
+async function startGame() {
+
+    gameOver = false;
+
+    score = 0;
+
+    timeline = [];
+
+
+    scoreElement.textContent =
+        score;
+
+
+    resultOverlay.classList.add(
+        "hidden"
+    );
+
+
+    statusElement.textContent =
+        "Creating your timeline...";
+
+
+    movieTitle.textContent =
+        "Loading...";
+
+
+    movieCard.draggable =
+        false;
+
+
+    /*
+        Generate a random starting year.
+    */
+
+    const startingYear =
+        randomNumber(
+            MIN_YEAR,
+            MAX_YEAR
         );
 
 
-        statusText.textContent =
+    timeline.push({
 
-            `Found a ${
-                validMovie.Country
-            } movie 🎬`;
+        title: "Starting Year",
+
+        year: startingYear,
+
+        starting: true
+
+    });
+
+
+    renderTimeline();
+
+
+    /*
+        Now get the first movie.
+    */
+
+    try {
+
+        await loadNextMovie();
 
     }
-
 
     catch (error) {
 
@@ -1008,36 +804,747 @@ async function getRandomMovie() {
         );
 
 
-        movieTitle.textContent =
-            "Nothing found";
-
-
-        moviePlot.textContent =
+        statusElement.textContent =
             error.message;
-
-
-        statusText.textContent =
-            "Try pressing the button again.";
 
     }
 
+}
 
-    randomButton.disabled =
+
+// ========================================
+// LOAD NEXT MOVIE
+// ========================================
+
+async function loadNextMovie() {
+
+    statusElement.textContent =
+        "Finding a movie...";
+
+
+    movieCard.draggable =
         false;
 
 
-    document.body.classList.remove(
-        "loading"
+    currentMovie =
+        await getRandomMovie();
+
+
+    movieTitle.textContent =
+        currentMovie.Title;
+
+
+    movieCard.draggable =
+        true;
+
+
+    statusElement.textContent =
+        "Drag the movie into the correct position.";
+
+}
+
+
+// ========================================
+// RENDER TIMELINE
+// ========================================
+
+function renderTimeline() {
+
+    timelineElement.innerHTML =
+        "";
+
+
+    /*
+        Sort timeline by year.
+    */
+
+    timeline.sort(
+        (a, b) =>
+            a.year - b.year
+    );
+
+
+    const container =
+        document.createElement(
+            "div"
+        );
+
+
+    container.className =
+        "timeline-container";
+
+
+    /*
+        There is a drop zone before
+        every movie and one after the
+        final movie.
+
+        Example:
+
+        DROP → 1985 → DROP → 1990 → DROP
+    */
+
+
+    timeline.forEach(
+        (movie, index) => {
+
+            /*
+                DROP ZONE
+            */
+
+            const dropZone =
+                createDropZone(
+                    index
+                );
+
+
+            container.appendChild(
+                dropZone
+            );
+
+
+            /*
+                MOVIE
+            */
+
+            const movieElement =
+                createTimelineMovie(
+                    movie
+                );
+
+
+            container.appendChild(
+                movieElement
+            );
+
+        }
+    );
+
+
+    /*
+        Final drop zone
+    */
+
+    const finalDropZone =
+        createDropZone(
+            timeline.length
+        );
+
+
+    container.appendChild(
+        finalDropZone
+    );
+
+
+    timelineElement.appendChild(
+        container
     );
 
 }
 
 
 // ========================================
-// BUTTON
+// CREATE TIMELINE MOVIE
 // ========================================
 
-randomButton.addEventListener(
-    "click",
-    getRandomMovie
+function createTimelineMovie(
+    movie
+) {
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "timeline-movie";
+
+
+    const dot =
+        document.createElement(
+            "div"
+        );
+
+
+    dot.className =
+        "timeline-dot";
+
+
+    const year =
+        document.createElement(
+            "div"
+        );
+
+
+    year.className =
+        "timeline-year";
+
+
+    year.textContent =
+        movie.year;
+
+
+    const title =
+        document.createElement(
+            "div"
+        );
+
+
+    title.className =
+        "timeline-title";
+
+
+    title.textContent =
+        movie.title;
+
+
+    element.appendChild(
+        dot
+    );
+
+
+    element.appendChild(
+        year
+    );
+
+
+    /*
+        Only show the title of
+        movies that have already
+        been successfully placed.
+    */
+
+    if (
+        !movie.starting
+    ) {
+
+        element.appendChild(
+            title
+        );
+
+    }
+
+
+    return element;
+
+}
+
+
+// ========================================
+// CREATE DROP ZONE
+// ========================================
+
+function createDropZone(
+    position
+) {
+
+    const zone =
+        document.createElement(
+            "div"
+        );
+
+
+    zone.className =
+        "drop-zone";
+
+
+    zone.dataset.position =
+        position;
+
+
+    /*
+        Drag enters the zone.
+    */
+
+    zone.addEventListener(
+        "dragover",
+        event => {
+
+            event.preventDefault();
+
+            zone.classList.add(
+                "active"
+            );
+
+        }
+    );
+
+
+    /*
+        Drag leaves.
+    */
+
+    zone.addEventListener(
+        "dragleave",
+        () => {
+
+            zone.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    /*
+        Movie dropped.
+    */
+
+    zone.addEventListener(
+        "drop",
+        event => {
+
+            event.preventDefault();
+
+            zone.classList.remove(
+                "active"
+            );
+
+
+            if (
+                !currentMovie ||
+                gameOver
+            ) {
+
+                return;
+
+            }
+
+
+            const position =
+                Number(
+                    zone.dataset.position
+                );
+
+
+            checkPlacement(
+                position
+            );
+
+        }
+    );
+
+
+    return zone;
+
+}
+
+
+// ========================================
+// DRAG START
+// ========================================
+
+movieCard.addEventListener(
+    "dragstart",
+    event => {
+
+        if (
+            !currentMovie ||
+            gameOver
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
+
+        movieCard.classList.add(
+            "dragging"
+        );
+
+
+        event.dataTransfer.effectAllowed =
+            "move";
+
+    }
 );
+
+
+// ========================================
+// DRAG END
+// ========================================
+
+movieCard.addEventListener(
+    "dragend",
+    () => {
+
+        movieCard.classList.remove(
+            "dragging"
+        );
+
+    }
+);
+
+
+// ========================================
+// CHECK PLACEMENT
+// ========================================
+
+async function checkPlacement(
+    position
+) {
+
+    if (
+        !currentMovie ||
+        gameOver
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+        We determine the allowed range
+        for this position.
+
+        Example:
+
+        1985 | 1990
+
+        The movie is correct if:
+
+        1985 < movie year < 1990
+
+        We also allow equality at the
+        boundaries, although movies with
+        the exact same year require a
+        special rule.
+    */
+
+
+    let correct = false;
+
+
+    if (
+        timeline.length === 1
+    ) {
+
+        /*
+            Only the starting year exists.
+
+            Position 0 = before
+            Position 1 = after
+        */
+
+        if (
+            position === 0
+        ) {
+
+            correct =
+                currentMovie.Year <
+                timeline[0].year;
+
+        }
+
+        else {
+
+            correct =
+                currentMovie.Year >
+                timeline[0].year;
+
+        }
+
+    }
+
+    else {
+
+        /*
+            Timeline is already sorted.
+        */
+
+        if (
+            position === 0
+        ) {
+
+            correct =
+                currentMovie.Year <=
+                timeline[0].year;
+
+        }
+
+        else if (
+            position === timeline.length
+        ) {
+
+            correct =
+                currentMovie.Year >=
+                timeline[
+                    timeline.length - 1
+                ].year;
+
+        }
+
+        else {
+
+            const previous =
+                timeline[
+                    position - 1
+                ].year;
+
+
+            const next =
+                timeline[
+                    position
+                ].year;
+
+
+            correct =
+
+                currentMovie.Year >=
+                previous &&
+
+                currentMovie.Year <=
+                next;
+
+        }
+
+    }
+
+
+    if (correct) {
+
+        await handleCorrectAnswer(
+            position
+        );
+
+    }
+
+    else {
+
+        handleWrongAnswer(
+            position
+        );
+
+    }
+
+}
+
+
+// ========================================
+// CORRECT
+// ========================================
+
+async function handleCorrectAnswer(
+    position
+) {
+
+    score++;
+
+    scoreElement.textContent =
+        score;
+
+
+    statusElement.textContent =
+        `✓ Correct! ${
+            currentMovie.Title
+        } was released in ${
+            currentMovie.Year
+        }. +1 point`;
+
+
+    statusElement.className =
+        "status success";
+
+
+    /*
+        Add movie to timeline.
+    */
+
+    timeline.push({
+
+        title:
+            currentMovie.Title,
+
+        year:
+            currentMovie.Year,
+
+        starting:
+            false
+
+    });
+
+
+    renderTimeline();
+
+
+    /*
+        Temporarily disable the card.
+    */
+
+    movieCard.draggable =
+        false;
+
+
+    currentMovie =
+        null;
+
+
+    /*
+        Wait a moment so the player
+        can see the successful result.
+    */
+
+    await wait(900);
+
+
+    statusElement.className =
+        "status";
+
+
+    /*
+        Get next movie.
+    */
+
+    try {
+
+        await loadNextMovie();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        statusElement.textContent =
+            error.message;
+
+    }
+
+}
+
+
+// ========================================
+// WRONG
+// ========================================
+
+function handleWrongAnswer(
+    position
+) {
+
+    gameOver =
+        true;
+
+
+    movieCard.draggable =
+        false;
+
+
+    /*
+        Find the correct position
+        visually so we can explain
+        what happened.
+    */
+
+    const actualYear =
+        currentMovie.Year;
+
+
+    statusElement.textContent =
+        `✗ Wrong! ${
+            currentMovie.Title
+        } was released in ${
+            actualYear
+        }.`;
+
+    statusElement.className =
+        "status error";
+
+
+    /*
+        Show the movie's real year
+        before ending the game.
+    */
+
+    setTimeout(
+        () => {
+
+            showGameOver();
+
+        },
+        800
+    );
+
+}
+
+
+// ========================================
+// GAME OVER
+// ========================================
+
+function showGameOver() {
+
+    resultIcon.textContent =
+        "❌";
+
+
+    resultTitle.textContent =
+        "Game Over";
+
+
+    resultMessage.innerHTML =
+
+        `<strong>${
+            currentMovie.Title
+        }</strong> was released in ${
+            currentMovie.Year
+        }.`;
+
+
+    finalScore.textContent =
+        score;
+
+
+    resultOverlay.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+// ========================================
+// WAIT
+// ========================================
+
+function wait(
+    milliseconds
+) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                milliseconds
+            )
+    );
+
+}
+
+
+// ========================================
+// BUTTONS
+// ========================================
+
+newGameButton.addEventListener(
+    "click",
+    startGame
+);
+
+
+playAgainButton.addEventListener(
+    "click",
+    startGame
+);
+
+
+// ========================================
+// START
+// ========================================
+
+startGame();
