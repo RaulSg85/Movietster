@@ -1235,7 +1235,7 @@ async function checkPlacement(
         ) {
 
             correct =
-                currentMovie.Year <
+                Number(currentMovie.Year) <
                 timeline[0].year;
 
         }
@@ -1243,7 +1243,7 @@ async function checkPlacement(
         else {
 
             correct =
-                currentMovie.Year >
+                Number(currentMovie.Year) >
                 timeline[0].year;
 
         }
@@ -1261,7 +1261,7 @@ async function checkPlacement(
         ) {
 
             correct =
-                currentMovie.Year <=
+                Number(currentMovie.Year) <=
                 timeline[0].year;
 
         }
@@ -1271,7 +1271,7 @@ async function checkPlacement(
         ) {
 
             correct =
-                currentMovie.Year >=
+                Number(currentMovie.Year) >=
                 timeline[
                     timeline.length - 1
                 ].year;
@@ -1294,10 +1294,10 @@ async function checkPlacement(
 
             correct =
 
-                currentMovie.Year >=
+                Number(currentMovie.Year) >=
                 previous &&
 
-                currentMovie.Year <=
+                Number(currentMovie.Year) <=
                 next;
 
         }
