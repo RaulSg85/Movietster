@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Random Movie</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="background-glow"></div>
+
+
+    <main class="app">
+
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div class="logo">
+
+                <span class="clapper">🎬</span>
+
+                <span>RANDOM MOVIE</span>
+
+            </div>
+
+
+            <p class="subtitle">
+
+                Discover a movie from Europe, Japan or the Americas.
+
+            </p>
+
+        </header>
+
+
+
+        <!-- MOVIE CARD -->
+
+        <section
+            class="movie-card"
+            id="movieCard"
+        >
+
+
+            <!-- POSTER -->
+
+            <div class="poster-container">
+
+                <img
+                    id="poster"
+                    src=""
+                    alt="Movie poster"
+                >
+
+
+                <div
+                    class="poster-placeholder"
+                    id="posterPlaceholder"
+                >
+
+                    🎞️
+
+                </div>
+
+            </div>
+
+
+
+            <!-- INFORMATION -->
+
+            <div class="movie-info">
+
+
+                <p class="eyebrow">
+
+                    YOUR NEXT MOVIE
+
+                </p>
+
+
+                <h1 id="movieTitle">
+
+                    Press the button
+
+                </h1>
+
+
+
+                <div class="movie-details">
+
+
+                    <span id="movieYear">
+
+                        🎬 —
+
+                    </span>
+
+
+                    <span id="movieRuntime">
+
+                        ⏱ —
+
+                    </span>
+
+
+                    <span id="movieRating">
+
+                        ⭐ —
+
+                    </span>
+
+
+                </div>
+
+
+
+                <p
+                    class="genre"
+                    id="movieGenre"
+                >
+
+                    Ready when you are.
+
+                </p>
+
+
+
+                <p
+                    class="plot"
+                    id="moviePlot"
+                >
+
+                    Discover a movie from 1920 to today.
+
+                </p>
+
+
+
+                <div class="credits">
+
+
+                    <p>
+
+                        <strong>Director</strong>
+
+                        <span id="movieDirector">
+                            —
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>Cast</strong>
+
+                        <span id="movieActors">
+                            —
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>Country</strong>
+
+                        <span id="movieCountry">
+                            —
+                        </span>
+
+                    </p>
+
+
+                </div>
+
+
+
+                <a
+                    id="imdbLink"
+                    class="imdb-link"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="display: none;"
+                >
+
+                    View on IMDb ↗
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- BUTTON -->
+
+        <button
+            id="randomButton"
+            class="random-button"
+        >
+
+            <span class="button-icon">
+
+                🎲
+
+            </span>
+
+            <span>
+
+                RANDOM MOVIE
+
+            </span>
+
+        </button>
+
+
+
+        <!-- STATUS -->
+
+        <p
+            id="status"
+            class="status"
+        >
+
+            Movies: 1920–2026 · Europe · Japan · Americas
+
+        </p>
+
+
+
+        <footer>
+
+            Movie data provided by OMDb API
+
+        </footer>
+
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
