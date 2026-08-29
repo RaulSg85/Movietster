@@ -14,7 +14,7 @@ const MAX_YEAR =
 
 
 // ========================================
-// SEARCH TERMS
+// SEARCH WORDS
 // ========================================
 
 const SEARCH_WORDS = [
@@ -152,6 +152,19 @@ let gameOver = false;
 
 
 // ========================================
+// DRAG STATE
+// ========================================
+
+let isDragging = false;
+
+let dragGhost = null;
+
+let activeDropZone = null;
+
+let dragPointerId = null;
+
+
+// ========================================
 // RANDOM NUMBER
 // ========================================
 
@@ -197,7 +210,7 @@ function getRandomSearch() {
 
 
 // ========================================
-// OMDb SEARCH
+// SEARCH OMDb
 // ========================================
 
 async function searchMovies(
@@ -287,7 +300,7 @@ async function getMovieDetails(
 
 
 // ========================================
-// COUNTRY CHECK
+// ALLOWED COUNTRIES
 // ========================================
 
 function isAllowedCountry(
@@ -317,7 +330,9 @@ function isAllowedCountry(
 
     const allowedCountries = [
 
-        // Europe
+        // ==================================
+        // EUROPE
+        // ==================================
 
         "albania",
         "andorra",
@@ -341,17 +356,21 @@ function isAllowedCountry(
         "ireland",
         "italy",
         "latvia",
+        "liechtenstein",
         "lithuania",
         "luxembourg",
         "malta",
+        "moldova",
         "monaco",
         "montenegro",
         "netherlands",
+        "north macedonia",
         "norway",
         "poland",
         "portugal",
         "romania",
         "russia",
+        "san marino",
         "serbia",
         "slovakia",
         "slovenia",
@@ -361,12 +380,17 @@ function isAllowedCountry(
         "turkey",
         "ukraine",
         "united kingdom",
+        "vatican city",
 
-        // Japan
+        // ==================================
+        // JAPAN
+        // ==================================
 
         "japan",
 
-        // North America
+        // ==================================
+        // NORTH AMERICA
+        // ==================================
 
         "united states",
         "usa",
@@ -387,7 +411,9 @@ function isAllowedCountry(
         "barbados",
         "trinidad and tobago",
 
-        // South America
+        // ==================================
+        // SOUTH AMERICA
+        // ==================================
 
         "argentina",
         "bolivia",
@@ -438,11 +464,6 @@ function isValidMovie(
 
     }
 
-
-    /*
-        We only accept an exact
-        four-digit year.
-    */
 
     if (
         !/^\d{4}$/.test(
@@ -540,8 +561,8 @@ async function getRandomMovie() {
             ) {
 
                 /*
-                    Don't allow the same
-                    movie twice.
+                    Don't use a movie
+                    already in the timeline.
                 */
 
                 if (
@@ -602,8 +623,14 @@ async function getRandomMovie() {
 async function startGame() {
 
     /*
-        IMPORTANT:
-        Hide the game-over screen.
+        Stop any active drag.
+    */
+
+    cancelDrag();
+
+
+    /*
+        Hide Game Over.
     */
 
     resultOverlay.classList.remove(
@@ -628,16 +655,13 @@ async function startGame() {
         "Loading...";
 
 
-    movieCard.draggable =
-        false;
-
-
-    statusElement.className =
-        "status";
+    movieCard.classList.remove(
+        "dragging"
+    );
 
 
     /*
-        Generate the starting year.
+        Generate starting year.
     */
 
     const startingYear =
@@ -649,21 +673,29 @@ async function startGame() {
 
     timeline.push({
 
-        title: "Starting Year",
+        title:
+            "Starting Year",
 
-        year: startingYear,
+        year:
+            startingYear,
 
-        starting: true
+        starting:
+            true
 
     });
 
 
     /*
-        SHOW THE STARTING YEAR
-        IMMEDIATELY.
+        Render immediately so
+        the player can see their
+        starting year.
     */
 
     renderTimeline();
+
+
+    statusElement.className =
+        "status";
 
 
     statusElement.textContent =
@@ -694,13 +726,13 @@ async function startGame() {
 
 
 // ========================================
-// LOAD MOVIE
+// LOAD NEXT MOVIE
 // ========================================
 
 async function loadNextMovie() {
 
-    movieCard.draggable =
-        false;
+    movieCard.style.pointerEvents =
+        "none";
 
 
     currentMovie =
@@ -711,8 +743,8 @@ async function loadNextMovie() {
         currentMovie.Title;
 
 
-    movieCard.draggable =
-        true;
+    movieCard.style.pointerEvents =
+        "auto";
 
 
     statusElement.className =
@@ -720,7 +752,7 @@ async function loadNextMovie() {
 
 
     statusElement.textContent =
-        "Drag the movie into the correct position.";
+        "Press and hold the movie, then drag it to the timeline.";
 
 }
 
@@ -736,23 +768,13 @@ function renderTimeline() {
 
 
     /*
-        Sort oldest → newest.
+        Oldest → newest.
     */
 
     timeline.sort(
         (a, b) =>
             a.year - b.year
     );
-
-
-    const timelineDiv =
-        document.createElement(
-            "div"
-        );
-
-
-    timelineDiv.className =
-        "timeline";
 
 
     const container =
@@ -765,12 +787,13 @@ function renderTimeline() {
         "timeline-container";
 
 
+    /*
+        Create a drop zone BEFORE
+        every movie.
+    */
+
     timeline.forEach(
         (movie, index) => {
-
-            /*
-                Drop zone before movie.
-            */
 
             container.appendChild(
                 createDropZone(
@@ -779,18 +802,10 @@ function renderTimeline() {
             );
 
 
-            /*
-                Movie marker.
-            */
-
-            const movieElement =
+            container.appendChild(
                 createTimelineMovie(
                     movie
-                );
-
-
-            container.appendChild(
-                movieElement
+                )
             );
 
         }
@@ -798,7 +813,8 @@ function renderTimeline() {
 
 
     /*
-        Final drop zone.
+        Final drop zone after
+        the newest movie.
     */
 
     container.appendChild(
@@ -808,20 +824,15 @@ function renderTimeline() {
     );
 
 
-    timelineDiv.appendChild(
-        container
-    );
-
-
     timelineElement.appendChild(
-        timelineDiv
+        container
     );
 
 }
 
 
 // ========================================
-// TIMELINE MOVIE
+// CREATE TIMELINE MOVIE
 // ========================================
 
 function createTimelineMovie(
@@ -883,11 +894,6 @@ function createTimelineMovie(
     );
 
 
-    /*
-        Don't show "Starting Year"
-        as a movie title.
-    */
-
     if (
         !movie.starting
     ) {
@@ -919,7 +925,7 @@ function createTimelineMovie(
 
 
 // ========================================
-// DROP ZONE
+// CREATE DROP ZONE
 // ========================================
 
 function createDropZone(
@@ -936,66 +942,55 @@ function createDropZone(
         "drop-zone";
 
 
-    zone.addEventListener(
-        "dragover",
-        event => {
+    /*
+        The visible line.
+    */
 
-            event.preventDefault();
+    const line =
+        document.createElement(
+            "div"
+        );
 
-            if (
-                !gameOver &&
-                currentMovie
-            ) {
 
-                zone.classList.add(
-                    "active"
-                );
+    line.className =
+        "drop-line";
 
-            }
 
-        }
+    zone.appendChild(
+        line
     );
 
 
-    zone.addEventListener(
-        "dragleave",
-        () => {
+    /*
+        DROP label.
+    */
 
-            zone.classList.remove(
-                "active"
-            );
+    const label =
+        document.createElement(
+            "div"
+        );
 
-        }
+
+    label.className =
+        "drop-label";
+
+
+    label.textContent =
+        "DROP";
+
+
+    zone.appendChild(
+        label
     );
 
 
-    zone.addEventListener(
-        "drop",
-        event => {
+    /*
+        Store the position directly
+        on the element.
+    */
 
-            event.preventDefault();
-
-            zone.classList.remove(
-                "active"
-            );
-
-
-            if (
-                gameOver ||
-                !currentMovie
-            ) {
-
-                return;
-
-            }
-
-
-            checkPlacement(
-                position
-            );
-
-        }
-    );
+    zone.dataset.position =
+        position;
 
 
     return zone;
@@ -1004,47 +999,542 @@ function createDropZone(
 
 
 // ========================================
-// DRAG EVENTS
+// POINTER DOWN
 // ========================================
 
 movieCard.addEventListener(
-    "dragstart",
+    "pointerdown",
     event => {
 
         if (
-            !currentMovie ||
-            gameOver
+            gameOver ||
+            !currentMovie
         ) {
-
-            event.preventDefault();
 
             return;
 
         }
 
 
-        movieCard.classList.add(
-            "dragging"
+        /*
+            Only accept the primary
+            mouse button.
+
+            Touch and pen are also
+            considered primary.
+        */
+
+        if (
+            event.pointerType ===
+            "mouse" &&
+            event.button !== 0
+        ) {
+
+            return;
+
+        }
+
+
+        event.preventDefault();
+
+
+        dragPointerId =
+            event.pointerId;
+
+
+        /*
+            Capture pointer movements
+            even if the finger/mouse
+            leaves the card.
+        */
+
+        movieCard.setPointerCapture(
+            event.pointerId
         );
 
 
-        event.dataTransfer.effectAllowed =
-            "move";
+        startDrag(
+            event
+        );
 
     }
 );
 
+
+// ========================================
+// POINTER MOVE
+// ========================================
 
 movieCard.addEventListener(
-    "dragend",
-    () => {
+    "pointermove",
+    event => {
 
-        movieCard.classList.remove(
-            "dragging"
+        if (
+            !isDragging ||
+            event.pointerId !==
+                dragPointerId
+        ) {
+
+            return;
+
+        }
+
+
+        event.preventDefault();
+
+
+        moveDrag(
+            event
         );
 
     }
 );
+
+
+// ========================================
+// POINTER UP
+// ========================================
+
+movieCard.addEventListener(
+    "pointerup",
+    event => {
+
+        if (
+            !isDragging ||
+            event.pointerId !==
+                dragPointerId
+        ) {
+
+            return;
+
+        }
+
+
+        event.preventDefault();
+
+
+        finishDrag();
+
+    }
+);
+
+
+// ========================================
+// POINTER CANCEL
+// ========================================
+
+movieCard.addEventListener(
+    "pointercancel",
+    () => {
+
+        cancelDrag();
+
+    }
+);
+
+
+// ========================================
+// START DRAG
+// ========================================
+
+function startDrag(
+    event
+) {
+
+    isDragging = true;
+
+
+    movieCard.classList.add(
+        "dragging"
+    );
+
+
+    /*
+        Create floating movie title.
+    */
+
+    dragGhost =
+        document.createElement(
+            "div"
+        );
+
+
+    dragGhost.className =
+        "drag-ghost";
+
+
+    dragGhost.textContent =
+        currentMovie.Title;
+
+
+    document.body.appendChild(
+        dragGhost
+    );
+
+
+    updateGhostPosition(
+        event.clientX,
+        event.clientY
+    );
+
+
+    /*
+        Highlight the closest
+        drop position immediately.
+    */
+
+    updateDropZone(
+        event.clientX,
+        event.clientY
+    );
+
+}
+
+
+// ========================================
+// MOVE DRAG
+// ========================================
+
+function moveDrag(
+    event
+) {
+
+    updateGhostPosition(
+        event.clientX,
+        event.clientY
+    );
+
+
+    updateDropZone(
+        event.clientX,
+        event.clientY
+    );
+
+
+    /*
+        Automatically scroll the
+        timeline when dragging near
+        its left/right edge.
+    */
+
+    autoScrollTimeline(
+        event.clientX
+    );
+
+}
+
+
+// ========================================
+// UPDATE GHOST
+// ========================================
+
+function updateGhostPosition(
+    x,
+    y
+) {
+
+    if (!dragGhost) {
+
+        return;
+
+    }
+
+
+    dragGhost.style.left =
+        `${x}px`;
+
+
+    dragGhost.style.top =
+        `${y}px`;
+
+}
+
+
+// ========================================
+// FIND DROP ZONE
+// ========================================
+
+function updateDropZone(
+    pointerX,
+    pointerY
+) {
+
+    const zones =
+        Array.from(
+            document.querySelectorAll(
+                ".drop-zone"
+            )
+        );
+
+
+    if (
+        zones.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    let closestZone =
+        null;
+
+    let closestDistance =
+        Infinity;
+
+
+    /*
+        Find the zone whose center
+        is closest to the pointer.
+
+        We mainly care about the
+        horizontal position.
+    */
+
+    zones.forEach(
+        zone => {
+
+            const rect =
+                zone.getBoundingClientRect();
+
+
+            const centerX =
+                rect.left +
+                rect.width / 2;
+
+
+            const centerY =
+                rect.top +
+                rect.height / 2;
+
+
+            const distance =
+
+                Math.abs(
+                    pointerX -
+                    centerX
+                ) +
+
+                Math.abs(
+                    pointerY -
+                    centerY
+                ) *
+                0.25;
+
+
+            if (
+                distance <
+                closestDistance
+            ) {
+
+                closestDistance =
+                    distance;
+
+                closestZone =
+                    zone;
+
+            }
+
+        }
+    );
+
+
+    /*
+        Remove old highlight.
+    */
+
+    if (
+        activeDropZone &&
+        activeDropZone !==
+            closestZone
+    ) {
+
+        activeDropZone.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    activeDropZone =
+        closestZone;
+
+
+    if (
+        activeDropZone
+    ) {
+
+        activeDropZone.classList.add(
+            "active"
+        );
+
+    }
+
+}
+
+
+// ========================================
+// AUTO SCROLL
+// ========================================
+
+function autoScrollTimeline(
+    pointerX
+) {
+
+    const rect =
+        timelineElement.getBoundingClientRect();
+
+
+    const edge =
+        80;
+
+
+    /*
+        Near left edge.
+    */
+
+    if (
+        pointerX <
+        rect.left + edge
+    ) {
+
+        timelineElement.scrollLeft -=
+            12;
+
+    }
+
+
+    /*
+        Near right edge.
+    */
+
+    else if (
+        pointerX >
+        rect.right - edge
+    ) {
+
+        timelineElement.scrollLeft +=
+            12;
+
+    }
+
+}
+
+
+// ========================================
+// FINISH DRAG
+// ========================================
+
+function finishDrag() {
+
+    if (!isDragging) {
+
+        return;
+
+    }
+
+
+    let position = null;
+
+
+    if (
+        activeDropZone
+    ) {
+
+        position =
+            Number(
+                activeDropZone
+                    .dataset
+                    .position
+            );
+
+    }
+
+
+    cleanupDrag();
+
+
+    /*
+        No valid drop position.
+    */
+
+    if (
+        position === null
+    ) {
+
+        return;
+
+    }
+
+
+    checkPlacement(
+        position
+    );
+
+}
+
+
+// ========================================
+// CANCEL DRAG
+// ========================================
+
+function cancelDrag() {
+
+    if (!isDragging) {
+
+        cleanupDrag();
+
+        return;
+
+    }
+
+
+    cleanupDrag();
+
+}
+
+
+// ========================================
+// CLEANUP DRAG
+// ========================================
+
+function cleanupDrag() {
+
+    isDragging = false;
+
+
+    movieCard.classList.remove(
+        "dragging"
+    );
+
+
+    if (
+        dragGhost
+    ) {
+
+        dragGhost.remove();
+
+        dragGhost = null;
+
+    }
+
+
+    if (
+        activeDropZone
+    ) {
+
+        activeDropZone.classList.remove(
+            "active"
+        );
+
+        activeDropZone = null;
+
+    }
+
+
+    dragPointerId = null;
+
+}
 
 
 // ========================================
@@ -1054,6 +1544,16 @@ movieCard.addEventListener(
 function checkPlacement(
     position
 ) {
+
+    if (
+        !currentMovie ||
+        gameOver
+    ) {
+
+        return;
+
+    }
+
 
     const movieYear =
         Number(
@@ -1065,7 +1565,7 @@ function checkPlacement(
 
 
     /*
-        Before the oldest movie.
+        BEFORE EVERYTHING
     */
 
     if (
@@ -1080,7 +1580,7 @@ function checkPlacement(
 
 
     /*
-        After the newest movie.
+        AFTER EVERYTHING
     */
 
     else if (
@@ -1097,7 +1597,7 @@ function checkPlacement(
 
 
     /*
-        Between two movies.
+        BETWEEN TWO MOVIES
     */
 
     else {
@@ -1127,7 +1627,9 @@ function checkPlacement(
 
     if (correct) {
 
-        handleCorrectAnswer();
+        handleCorrectAnswer(
+            position
+        );
 
     }
 
@@ -1144,7 +1646,9 @@ function checkPlacement(
 // CORRECT ANSWER
 // ========================================
 
-async function handleCorrectAnswer() {
+async function handleCorrectAnswer(
+    position
+) {
 
     score++;
 
@@ -1163,6 +1667,10 @@ async function handleCorrectAnswer() {
             currentMovie.Year
         }. +1 point`;
 
+
+    /*
+        Add the movie.
+    */
 
     timeline.push({
 
@@ -1183,11 +1691,18 @@ async function handleCorrectAnswer() {
     });
 
 
+    /*
+        Render again.
+
+        The movie will automatically
+        appear in chronological order.
+    */
+
     renderTimeline();
 
 
-    movieCard.draggable =
-        false;
+    movieCard.style.pointerEvents =
+        "none";
 
 
     currentMovie =
@@ -1236,8 +1751,8 @@ function handleWrongAnswer() {
     gameOver = true;
 
 
-    movieCard.draggable =
-        false;
+    movieCard.style.pointerEvents =
+        "none";
 
 
     statusElement.className =
@@ -1266,6 +1781,13 @@ function handleWrongAnswer() {
 
 function showGameOver() {
 
+    if (!currentMovie) {
+
+        return;
+
+    }
+
+
     resultMessage.innerHTML =
         `<strong>${
             currentMovie.Title
@@ -1277,10 +1799,6 @@ function showGameOver() {
     finalScore.textContent =
         score;
 
-
-    /*
-        Explicitly show the overlay.
-    */
 
     resultOverlay.classList.add(
         "visible"
@@ -1325,7 +1843,7 @@ playAgainButton.addEventListener(
 
 
 // ========================================
-// START
+// START GAME
 // ========================================
 
 startGame();

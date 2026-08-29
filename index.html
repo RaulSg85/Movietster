@@ -7,7 +7,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
     <title>Movie Timeline</title>
@@ -19,150 +19,153 @@
 
 </head>
 
+
 <body>
 
-    <main class="app">
+<main class="app">
 
-        <!-- HEADER -->
+    <!-- HEADER -->
 
-        <header class="header">
+    <header class="header">
 
-            <div class="logo">
-                🎬 MOVIE TIMELINE
-            </div>
+        <div class="logo">
+            🎬 MOVIE TIMELINE
+        </div>
 
-            <p class="subtitle">
-                Place each movie in the correct position.
+        <p class="subtitle">
+            Place each movie in the correct position.
+        </p>
+
+        <div class="score">
+            SCORE
+            <span id="score">0</span>
+        </div>
+
+    </header>
+
+
+    <!-- GAME -->
+
+    <section class="game">
+
+        <!-- CURRENT MOVIE -->
+
+        <div class="current-movie-area">
+
+            <p class="eyebrow">
+                PLACE THIS MOVIE
             </p>
 
-            <div class="score">
-                SCORE
-                <span id="score">0</span>
-            </div>
-
-        </header>
-
-
-        <!-- GAME -->
-
-        <section class="game">
-
-            <!-- CURRENT MOVIE -->
-
-            <div class="current-movie-area">
-
-                <p class="eyebrow">
-                    PLACE THIS MOVIE
-                </p>
-
-                <div
-                    id="movieCard"
-                    class="movie-card"
-                    draggable="false"
-                >
-
-                    <div class="movie-icon">
-                        🎬
-                    </div>
-
-                    <h1 id="movieTitle">
-                        Loading...
-                    </h1>
-
-                    <p class="drag-text">
-                        Drag me to the timeline
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <!-- TIMELINE -->
-
-            <div class="timeline-section">
-
-                <p class="timeline-label">
-                    YOUR TIMELINE
-                </p>
-
-                <div id="timeline"></div>
-
-            </div>
-
-
-            <!-- STATUS -->
-
             <div
-                id="status"
-                class="status"
+                id="movieCard"
+                class="movie-card"
             >
-                Finding a movie...
-            </div>
 
-
-            <button
-                id="newGameButton"
-                class="new-game-button"
-            >
-                NEW GAME
-            </button>
-
-        </section>
-
-
-        <!-- GAME OVER -->
-
-        <div
-            id="resultOverlay"
-            class="overlay"
-        >
-
-            <div class="result-card">
-
-                <div
-                    id="resultIcon"
-                    class="result-icon"
-                >
-                    ❌
+                <div class="movie-icon">
+                    🎬
                 </div>
 
-                <h2 id="resultTitle">
-                    Game Over
-                </h2>
+                <h1 id="movieTitle">
+                    Loading...
+                </h1>
 
-                <p id="resultMessage"></p>
-
-                <div class="final-score">
-
-                    SCORE
-
-                    <strong id="finalScore">
-                        0
-                    </strong>
-
-                </div>
-
-                <button
-                    id="playAgainButton"
-                    class="play-again-button"
-                >
-                    PLAY AGAIN
-                </button>
+                <p class="drag-text">
+                    Press and hold, then drag me to the timeline
+                </p>
 
             </div>
 
         </div>
 
 
-        <footer>
-            Movie data provided by OMDb API
-        </footer>
+        <!-- TIMELINE -->
 
-    </main>
+        <div class="timeline-section">
+
+            <p class="timeline-label">
+                YOUR TIMELINE
+            </p>
+
+            <div
+                id="timeline"
+                class="timeline-wrapper"
+            ></div>
+
+        </div>
 
 
-    <script src="script.js"></script>
+        <!-- STATUS -->
+
+        <div
+            id="status"
+            class="status"
+        >
+            Finding a movie...
+        </div>
+
+
+        <button
+            id="newGameButton"
+            class="new-game-button"
+        >
+            NEW GAME
+        </button>
+
+    </section>
+
+
+    <!-- GAME OVER -->
+
+    <div
+        id="resultOverlay"
+        class="overlay"
+    >
+
+        <div class="result-card">
+
+            <div
+                id="resultIcon"
+                class="result-icon"
+            >
+                ❌
+            </div>
+
+            <h2>
+                Game Over
+            </h2>
+
+            <p id="resultMessage"></p>
+
+            <div class="final-score">
+
+                SCORE
+
+                <strong id="finalScore">
+                    0
+                </strong>
+
+            </div>
+
+            <button
+                id="playAgainButton"
+                class="play-again-button"
+            >
+                PLAY AGAIN
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        Movie data provided by OMDb API
+    </footer>
+
+</main>
+
+
+<script src="script.js"></script>
 
 </body>
 

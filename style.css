@@ -28,6 +28,14 @@
 }
 
 
+html,
+body {
+
+    min-height: 100%;
+
+}
+
+
 body {
 
     min-height: 100vh;
@@ -51,6 +59,8 @@ body {
 
     padding: 40px 20px;
 
+    overflow-x: hidden;
+
 }
 
 
@@ -67,9 +77,9 @@ body {
 }
 
 
-/* ==============================
+/* ========================================
    HEADER
-============================== */
+======================================== */
 
 .header {
 
@@ -130,13 +140,13 @@ body {
 }
 
 
-/* ==============================
+/* ========================================
    CURRENT MOVIE
-============================== */
+======================================== */
 
 .current-movie-area {
 
-    margin-bottom: 55px;
+    margin-bottom: 50px;
 
 }
 
@@ -160,7 +170,7 @@ body {
 
     width: min(600px, 100%);
 
-    min-height: 170px;
+    min-height: 180px;
 
     margin: auto;
 
@@ -185,9 +195,21 @@ body {
 
     user-select: none;
 
+    -webkit-user-select: none;
+
+    /*
+        IMPORTANT FOR MOBILE.
+
+        Prevents the browser from interpreting
+        a touch on the movie card as scrolling.
+    */
+
+    touch-action: none;
+
     transition:
         transform 0.2s,
-        opacity 0.2s;
+        opacity 0.2s,
+        box-shadow 0.2s;
 
 }
 
@@ -202,10 +224,13 @@ body {
 
 .movie-card.dragging {
 
-    opacity: 0.4;
+    opacity: 0.55;
 
-    transform:
-        scale(0.95);
+    cursor: grabbing;
+
+    box-shadow:
+        0 25px 70px
+        rgba(229, 9, 20, 0.25);
 
 }
 
@@ -240,9 +265,9 @@ body {
 }
 
 
-/* ==============================
+/* ========================================
    TIMELINE
-============================== */
+======================================== */
 
 .timeline-section {
 
@@ -253,7 +278,7 @@ body {
 
 .timeline-label {
 
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 
     color: var(--muted);
 
@@ -266,43 +291,91 @@ body {
 }
 
 
-.timeline {
+/*
+    Horizontal scrolling container.
 
-    display: flex;
+    This is particularly useful on mobile,
+    where a long timeline can become wider
+    than the screen.
+*/
 
-    justify-content: center;
+.timeline-wrapper {
 
-    align-items: center;
+    width: 100%;
 
     overflow-x: auto;
 
-    padding: 40px 20px 30px;
+    overflow-y: hidden;
+
+    padding:
+        30px 10px
+        35px;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+
+    /*
+        Allows horizontal scrolling when
+        the player isn't dragging.
+    */
+
+    touch-action: pan-x;
 
 }
 
 
-/* Container */
+.timeline-wrapper::-webkit-scrollbar {
+
+    height: 6px;
+
+}
+
+
+.timeline-wrapper::-webkit-scrollbar-track {
+
+    background: #111;
+
+}
+
+
+.timeline-wrapper::-webkit-scrollbar-thumb {
+
+    background: #444;
+
+    border-radius: 10px;
+
+}
+
+
+/*
+    Timeline itself.
+*/
 
 .timeline-container {
 
-    display: flex;
+    display: inline-flex;
 
     align-items: center;
+
+    min-width: max-content;
 
 }
 
 
-/* ==============================
+/* ========================================
    DROP ZONES
-============================== */
+======================================== */
 
 .drop-zone {
 
     position: relative;
 
-    width: 90px;
+    width: 75px;
 
-    height: 130px;
+    height: 150px;
+
+    flex-shrink: 0;
 
     display: flex;
 
@@ -310,14 +383,14 @@ body {
 
     align-items: center;
 
-    flex-shrink: 0;
-
 }
 
 
-.drop-zone::before {
+/*
+    The vertical insertion line.
+*/
 
-    content: "";
+.drop-line {
 
     width: 4px;
 
@@ -328,33 +401,40 @@ body {
     background: #333;
 
     transition:
-        height 0.2s,
-        background 0.2s,
-        box-shadow 0.2s;
+        height 0.15s,
+        background 0.15s,
+        box-shadow 0.15s;
 
 }
 
 
-.drop-zone.active::before {
+.drop-zone.active {
 
-    height: 90px;
+    z-index: 10;
+
+}
+
+
+.drop-zone.active .drop-line {
+
+    height: 110px;
 
     background: var(--accent);
 
     box-shadow:
-        0 0 25px
+        0 0 20px
         rgba(229, 9, 20, 0.8);
 
 }
 
 
-.drop-zone.active::after {
-
-    content: "DROP";
+.drop-label {
 
     position: absolute;
 
     top: 5px;
+
+    opacity: 0;
 
     color: var(--accent);
 
@@ -364,16 +444,26 @@ body {
 
     letter-spacing: 2px;
 
+    transition:
+        opacity 0.15s;
+
 }
 
 
-/* ==============================
+.drop-zone.active .drop-label {
+
+    opacity: 1;
+
+}
+
+
+/* ========================================
    TIMELINE MOVIES
-============================== */
+======================================== */
 
 .timeline-movie {
 
-    width: 130px;
+    width: 140px;
 
     flex-shrink: 0;
 
@@ -425,8 +515,6 @@ body {
 }
 
 
-/* Starting year */
-
 .timeline-movie.starting {
 
     transform:
@@ -447,9 +535,59 @@ body {
 }
 
 
-/* ==============================
+/* ========================================
+   DRAG GHOST
+======================================== */
+
+/*
+    This is the floating movie title that
+    follows your finger/mouse.
+*/
+
+.drag-ghost {
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    z-index: 9999;
+
+    width: 220px;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    background: #1c1516;
+
+    border: 1px solid
+        rgba(229, 9, 20, 0.6);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.6);
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    pointer-events: none;
+
+    transform:
+        translate(-50%, -120%);
+
+}
+
+
+/* ========================================
    STATUS
-============================== */
+======================================== */
 
 .status {
 
@@ -478,9 +616,9 @@ body {
 }
 
 
-/* ==============================
-   BUTTON
-============================== */
+/* ========================================
+   BUTTONS
+======================================== */
 
 .new-game-button {
 
@@ -516,9 +654,41 @@ body {
 }
 
 
-/* ==============================
+.play-again-button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: var(--accent);
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+}
+
+
+.play-again-button:hover {
+
+    background: var(--accent-dark);
+
+}
+
+
+/* ========================================
    GAME OVER
-============================== */
+======================================== */
 
 .overlay {
 
@@ -628,41 +798,9 @@ body {
 }
 
 
-.play-again-button {
-
-    width: 100%;
-
-    padding: 15px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background: var(--accent);
-
-    color: white;
-
-    font-size: 12px;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    cursor: pointer;
-
-}
-
-
-.play-again-button:hover {
-
-    background: var(--accent-dark);
-
-}
-
-
-/* ==============================
+/* ========================================
    FOOTER
-============================== */
+======================================== */
 
 footer {
 
@@ -675,15 +813,23 @@ footer {
 }
 
 
-/* ==============================
+/* ========================================
    MOBILE
-============================== */
+======================================== */
 
 @media (max-width: 700px) {
 
     body {
 
-        padding: 25px 15px;
+        padding:
+            25px 12px;
+
+    }
+
+
+    .header {
+
+        margin-bottom: 35px;
 
     }
 
@@ -692,26 +838,87 @@ footer {
 
         font-size: 22px;
 
+        letter-spacing: 2px;
+
     }
 
 
-    .timeline {
+    .subtitle {
 
-        justify-content: flex-start;
+        font-size: 13px;
+
+    }
+
+
+    .movie-card {
+
+        min-height: 160px;
+
+        padding: 25px 15px;
+
+    }
+
+
+    .movie-card h1 {
+
+        font-size: 32px;
+
+    }
+
+
+    .drag-text {
+
+        font-size: 11px;
+
+    }
+
+
+    .timeline-wrapper {
+
+        /*
+            Give the timeline plenty of
+            horizontal space on phones.
+        */
+
+        margin-left: -12px;
+
+        width:
+            calc(100% + 24px);
 
     }
 
 
     .drop-zone {
 
-        width: 65px;
+        width: 55px;
 
     }
 
 
     .timeline-movie {
 
-        width: 100px;
+        width: 110px;
+
+    }
+
+
+    .timeline-year {
+
+        font-size: 20px;
+
+    }
+
+
+    .timeline-title {
+
+        font-size: 10px;
+
+    }
+
+
+    .result-card {
+
+        padding: 30px 20px;
 
     }
 
